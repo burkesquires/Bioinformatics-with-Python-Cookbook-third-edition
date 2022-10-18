@@ -51,10 +51,7 @@ for rec in recs:
     num_blocks = size // block_size + 1
     for block in range(num_blocks):
         start = block_size * block
-        if block == num_blocks - 1:
-            end = size
-        else:
-            end = block_size + start + 1
+        end = size if block == num_blocks - 1 else block_size + start + 1
         block_seq = rec.seq[start:end]
         block_GC = SeqUtils.GC(block_seq)
         if block_GC < min_GC:
@@ -64,10 +61,7 @@ for rec in recs:
         chrom_GC[chrom].append(block_GC)
 print(min_GC, max_GC)
 
-# +
-chroms = list(chrom_sizes.keys())
-chroms.sort()
-
+chroms = sorted(chrom_sizes.keys())
 biggest_chrom = max(chrom_sizes.values())
 
 my_genome = BasicChromosome.Organism(output_format="png")
@@ -97,10 +91,7 @@ for chrom in chroms:
         else:
             my_color = (my_GC - bottom_GC) / (top_GC - bottom_GC)
             body.fill_color = colors.Color(my_color, my_color, 1)
-        if block < num_blocks - 1:
-            body.scale = block_size
-        else:
-            body.scale = chrom_size % block_size
+        body.scale = block_size if block < num_blocks - 1 else chrom_size % block_size
         chrom_representation.add(body)
 
     tel = BasicChromosome.TelomereSegment(inverted=True)

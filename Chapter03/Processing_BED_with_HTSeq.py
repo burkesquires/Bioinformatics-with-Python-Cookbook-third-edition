@@ -23,7 +23,7 @@ feature_types = defaultdict(int)
 
 for rec in lct_bed:
     last_rec = rec
-    feature_types[re.search('([A-Z]+)', rec.name).group(0)] += 1
+    feature_types[re.search('([A-Z]+)', rec.name)[0]] += 1
 
 print(feature_types)
 

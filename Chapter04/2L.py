@@ -30,7 +30,7 @@ for i in range(num_parents):
     print(np.median(dp_2L[:,i]), np.median(dp_2L[50000:150000,i]))
 
 window_size = 200000
-parent_DP_windows = [defaultdict(list) for i in range(num_parents)]
+parent_DP_windows = [defaultdict(list) for _ in range(num_parents)]
 
 
 # +

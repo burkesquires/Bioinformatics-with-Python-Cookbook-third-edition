@@ -86,7 +86,7 @@ def simplify_tree(node):
     for leaf in node.leaf_nodes():
         my_toks = leaf.taxon.label.split(' ')[0].split('_')
         if my_toks[0] == 'EBOV':
-            prefs.add('EBOV' + my_toks[1])
+            prefs.add(f'EBOV{my_toks[1]}')
         else:
             prefs.add(my_toks[0])
     if len(prefs) == 1:

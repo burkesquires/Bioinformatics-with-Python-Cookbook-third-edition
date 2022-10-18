@@ -42,16 +42,16 @@ print(rec.name)
 print(rec.description)
 
 for feature in rec.features:
-    if feature.type == 'gene':
-        print(feature.qualifiers['gene'])
-    elif feature.type == 'exon':
+    if feature.type == 'exon':
         loc = feature.location
         print('Exon', loc.start, loc.end, loc.strand)
+    elif feature.type == 'gene':
+        print(feature.qualifiers['gene'])
     else:
         print('not processed:\n%s' % feature)
 
 for name, value in rec.annotations.items():
-    print('%s=%s' % (name, value))
+    print(f'{name}={value}')
 
 print(len(rec.seq))
 
@@ -65,6 +65,6 @@ for ref in refs:
         records = Medline.parse(handle)
         for med_rec in records:
             for k, v in med_rec.items():
-                print('%s: %s' % (k, v))
+                print(f'{k}: {v}')
 
 

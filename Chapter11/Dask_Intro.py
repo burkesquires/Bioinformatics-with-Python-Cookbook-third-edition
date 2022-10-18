@@ -41,8 +41,7 @@ mosquito.visualize(rankdir='TB')
 
 def calc_stats(variant):
     variant = variant.reshape(variant.shape[0] // 2, 2)
-    num_misses = np.sum(np.equal(variant, -1)) // 2
-    return num_misses
+    return np.sum(np.equal(variant, -1)) // 2
 
 
 mosquito_2d = mosquito.reshape(mosquito.shape[0], mosquito.shape[1] * mosquito.shape[2])

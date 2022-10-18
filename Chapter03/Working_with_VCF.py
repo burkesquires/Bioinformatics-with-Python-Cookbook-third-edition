@@ -55,7 +55,7 @@ print(variant.is_snp)
 #rec.format('GT')
 
 str_alleles = variant.gt_bases[0]
-alleles = variant.genotypes[0][0:2]
+alleles = variant.genotypes[0][:2]
 is_phased = variant.genotypes[0][2]
 print(str_alleles, alleles, is_phased)
 print(variant.format('DP')[0])
@@ -83,10 +83,7 @@ for variant in f:
     for dp in variant.format('DP'):
         #dp = int(dp)
         sample_dp[dp] += 1
-# -
-
-dps = list(sample_dp.keys())
-dps.sort()
+dps = sorted(sample_dp.keys())
 dp_dist = [sample_dp[x] for x in dps]
 fig, ax = plt.subplots(figsize=(16, 9))
 ax.plot(dp_dist[:50], 'r')

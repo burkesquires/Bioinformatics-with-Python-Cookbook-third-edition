@@ -58,9 +58,10 @@ as_integer = robjects.r('as.integer')
 match = robjects.r.match
 
 my_col = match('READ_COUNT', seq_data.colnames)[0] # Vector returned
-print('Type of read count before as.integer: %s' % seq_data[my_col - 1].rclass[0])
+print(
+    f'Type of read count before as.integer: {seq_data[my_col - 1].rclass[0]}')
 seq_data[my_col - 1] = as_integer(seq_data[my_col - 1])
-print('Type of read count after as.integer: %s' % seq_data[my_col - 1].rclass[0])
+print(f'Type of read count after as.integer: {seq_data[my_col - 1].rclass[0]}')
 
 my_col = match('BASE_COUNT', seq_data.colnames)[0] # Vector returned
 seq_data[my_col - 1] = as_integer(seq_data[my_col - 1])
@@ -83,7 +84,7 @@ robjects.r('seq.data$POPULATION <- as.factor(seq.data$POPULATION)')
 ggplot2.theme = SignatureTranslatedFunction(ggplot2.theme,
                                             init_prm_translate = {'axis_text_x': 'axis.text.x'})
 bar = ggplot2.ggplot(seq_data) + ggplot2.geom_bar() + ggplot2.aes_string(x='CENTER_NAME') + ggplot2.theme(axis_text_x=ggplot2.element_text(angle=90, hjust=1, size=40), axis_text_y=ggplot2.element_text(size=40), text=ggplot2.element_text(size=40))
-robjects.r.png('out.png', width=16, height=9, units="in", res=600) 
+robjects.r.png('out.png', width=16, height=9, units="in", res=600)
 bar.plot()
 dev_off = robjects.r('dev.off')
 dev_off()

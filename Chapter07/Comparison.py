@@ -33,9 +33,12 @@ my_genes = ['NP', 'L', 'VP35', 'VP40']
 
 for name in my_genes:
     gene_name = name.split('.')[0]
-    char_mat = dendropy.DnaCharacterMatrix.get_from_path('%s_align.fasta' % name, 'fasta')
+    char_mat = dendropy.DnaCharacterMatrix.get_from_path(
+        f'{name}_align.fasta', 'fasta'
+    )
+
     genes_species[gene_name] = {}
-    
+
     for species in my_species:
         genes_species[gene_name][species] = dendropy.DnaCharacterMatrix()
     for taxon, char_map in char_mat.items():
@@ -55,7 +58,7 @@ for row, (gene, species_data) in enumerate(genes_species.items()):
         summary[row, col_base * 4 + 3] = popgenstat.wattersons_theta(species_data[species])
 columns = []
 for species in my_species:
-    columns.extend(['%s (%s)' % (stat, species) for stat in stats])
+    columns.extend([f'{stat} ({species})' for stat in stats])
 df = pd.DataFrame(summary, index=genes_species.keys(), columns=columns)
 df # vs print(df)
 
@@ -93,11 +96,11 @@ del ebov_seqs
 
 # +
 print('2007 outbreak:')
-print('Number of individuals: %s' % len(ebov2007_set.taxon_namespace))
+print(f'Number of individuals: {len(ebov2007_set.taxon_namespace)}')
 do_basic_popgen(ebov2007_set)
 
 print('\n2014 outbreak:')
-print('Number of individuals: %s' % len(ebov2014_set.taxon_namespace))
+print(f'Number of individuals: {len(ebov2014_set.taxon_namespace)}')
 do_basic_popgen(ebov2014_set)
 # -
 

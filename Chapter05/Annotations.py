@@ -33,9 +33,7 @@ print(list(db.featuretypes()))
 for feat_type in db.featuretypes():
     print(feat_type, db.count_features_of_type(feat_type))
 
-seqids = set()
-for e in db.all_features():
-    seqids.add(e.seqid)
+seqids = {e.seqid for e in db.all_features()}
 for seqid in seqids:
     print(seqid)
 
@@ -53,10 +51,7 @@ for seqid in seqids:
             max_span_gene = gene
         my_mRNAs = list(db.children(gene, featuretype='mRNA'))
         num_mRNAs[len(my_mRNAs)] += 1
-        if len(my_mRNAs) == 0:
-            exon_check = [gene]
-        else:
-            exon_check = my_mRNAs
+        exon_check = my_mRNAs or [gene]
         for check in exon_check:
             my_exons = list(db.children(check, featuretype='exon'))
             num_exons[len(my_exons)] += 1

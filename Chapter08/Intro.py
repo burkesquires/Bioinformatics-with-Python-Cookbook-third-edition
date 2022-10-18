@@ -24,7 +24,7 @@ from Bio import ExPASy, SwissProt
 server = 'http://www.uniprot.org/uniprot'
 def do_request(server, ID='', **kwargs):
     params = ''
-    req = requests.get('%s/%s%s' % (server, ID, params),params=kwargs)
+    req = requests.get(f'{server}/{ID}{params}', params=kwargs)
     if not req.ok:
         req.raise_for_status()
     return req
@@ -69,9 +69,8 @@ print('Total features:', len(sp_rec.features))
 for feature in sp_rec.features:
     if feature in done_features:
         continue
-    else:
-        done_features.add(feature)
-        print(feature)
+    done_features.add(feature)
+    print(feature)
 print('Cross references: ',len(sp_rec.cross_references))
 per_source = defaultdict(list)
 for xref in sp_rec.cross_references:
@@ -83,8 +82,7 @@ print('Annotation SOURCES:', len(per_source['GO']))
 for annot in per_source['GO']:
     if annot[1][0] in done_GOs:
         continue
-    else:
-        done_GOs.add(annot[1][0])
-        print(annot)
+    done_GOs.add(annot[1][0])
+    print(annot)
 
 

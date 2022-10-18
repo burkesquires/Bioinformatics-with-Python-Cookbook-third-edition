@@ -81,11 +81,8 @@ for rec in recs:
             continue
         pos = i + 1
         qual_pos[pos].append(qual)
-vps = []
-poses = list(qual_pos.keys())
-poses.sort()
-for pos in poses:
-    vps.append(qual_pos[pos])
+poses = sorted(qual_pos.keys())
+vps = [qual_pos[pos] for pos in poses]
 fig, ax = plt.subplots(figsize=(16,9), dpi=300, tight_layout=True)
 sns.boxplot(data=vps, ax=ax)
 ax.set_xticklabels([str(x) for x in range(26, max(qual_pos.keys()) + 1)])
@@ -110,10 +107,7 @@ f1 = gzip.open('SRR003265_1.filt.fastq.gz', 'rt', encoding='utf8')
 f2 = gzip.open('SRR003265_2.filt.fastq.gz', 'rt', encoding='utf8')
 recs1 = SeqIO.parse(f1, 'fastq')
 recs2 = SeqIO.parse(f2, 'fastq')
-cnt = 0
-for rec1, rec2 in zip(recs1, recs2):
-    cnt +=1
-
+cnt = sum(1 for rec1, rec2 in zip(recs1, recs2))
 print('Number of pairs: %d' % cnt)
 # -
 

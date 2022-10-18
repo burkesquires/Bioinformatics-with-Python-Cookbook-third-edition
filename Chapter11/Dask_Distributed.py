@@ -52,8 +52,7 @@ mosquito.chunks
 
 
 def calc_stats(my_chunk):
-    num_miss = np.sum(np.equal(my_chunk[0][0][:,:,0], -1), axis=1)
-    return num_miss
+    return np.sum(np.equal(my_chunk[0][0][:,:,0], -1), axis=1)
 
 
 stats = da.blockwise(calc_stats, 'i', mosquito, 'ijk', dtype=np.uint8)

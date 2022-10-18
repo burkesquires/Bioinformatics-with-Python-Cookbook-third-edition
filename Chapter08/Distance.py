@@ -24,11 +24,7 @@ parser = PDB.PDBParser()
 repository.retrieve_pdb_file('1TUP', file_format='pdb', pdir='.')  # XXX
 p53_1tup = parser.get_structure('P 53', 'pdb1tup.ent')
 
-zns = []
-for atom in p53_1tup.get_atoms():
-    if atom.element == 'ZN':
-        #print(atom, dir(atom), atom.mass, atom.element, atom.coord[0])
-        zns.append(atom)
+zns = [atom for atom in p53_1tup.get_atoms() if atom.element == 'ZN']
 for zn in zns:
         print(zn, zn.coord)
 
@@ -91,12 +87,12 @@ print(timeit.timeit('get_closest_alternative(p53_1tup, zns[0], 4.0)',
                     number=nexecs) / nexecs * 1000)
 
 print('Standard')
-for distance in [1, 4, 16, 64, 128]:
+for _ in [1, 4, 16, 64, 128]:
     print(timeit.timeit('get_closest_atoms(p53_1tup, zns[0], distance)',
                         'from __main__ import get_closest_atoms, p53_1tup, zns, distance',
                         number=nexecs) / nexecs * 1000)
 print('Optimized')
-for distance in [1, 4, 16, 64, 128]:
+for _ in [1, 4, 16, 64, 128]:
     print(timeit.timeit('get_closest_alternative(p53_1tup, zns[0], distance)',
                         'from __main__ import get_closest_alternative, p53_1tup, zns, distance',
                         number=nexecs) / nexecs * 1000)

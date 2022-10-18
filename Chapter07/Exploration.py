@@ -48,39 +48,50 @@ def get_other_ebolavirus_sources():
 
 
 # +
-other = open('other.fasta', 'w')
-sampled = open('sample.fasta', 'w')
+with open('other.fasta', 'w') as other:
+    sampled = open('sample.fasta', 'w')
 
-for species, recs in get_other_ebolavirus_sources():
-    tn = dendropy.TaxonNamespace()
-    char_mat = recs.generate_char_matrix(taxon_namespace=tn,
-        gb_to_taxon_fn=lambda gb: tn.require_taxon(label='%s_%s' % (species, gb.accession)))
-    char_mat.write_to_stream(other, 'fasta')
-    char_mat.write_to_stream(sampled, 'fasta')
-other.close()
-ebov_2014 = open('ebov_2014.fasta', 'w')
-ebov = open('ebov.fasta', 'w')
-for species, recs in get_ebov_2014_sources():
-    tn = dendropy.TaxonNamespace()
-    char_mat = recs.generate_char_matrix(taxon_namespace=tn,
-        gb_to_taxon_fn=lambda gb: tn.require_taxon(label='EBOV_2014_%s' % gb.accession))
-    char_mat.write_to_stream(ebov_2014, 'fasta')
-    char_mat.write_to_stream(sampled, 'fasta')
-    char_mat.write_to_stream(ebov, 'fasta')
-ebov_2014.close()
+    for species, recs in get_other_ebolavirus_sources():
+        tn = dendropy.TaxonNamespace()
+        char_mat = recs.generate_char_matrix(
+            taxon_namespace=tn,
+            gb_to_taxon_fn=lambda gb: tn.require_taxon(
+                label=f'{species}_{gb.accession}'
+            ),
+        )
 
-ebov_2007 = open('ebov_2007.fasta', 'w')
-for species, recs in get_other_ebov_sources():
-    tn = dendropy.TaxonNamespace()
-    char_mat = recs.generate_char_matrix(taxon_namespace=tn,
-        gb_to_taxon_fn=lambda gb: tn.require_taxon(label='%s_%s' % (species, gb.accession)))
-    char_mat.write_to_stream(ebov, 'fasta')
-    char_mat.write_to_stream(sampled, 'fasta')
-    if species == 'EBOV_2007':
-        char_mat.write_to_stream(ebov_2007, 'fasta')
+        char_mat.write_to_stream(other, 'fasta')
+        char_mat.write_to_stream(sampled, 'fasta')
+with open('ebov_2014.fasta', 'w') as ebov_2014:
+    ebov = open('ebov.fasta', 'w')
+    for species, recs in get_ebov_2014_sources():
+        tn = dendropy.TaxonNamespace()
+        char_mat = recs.generate_char_matrix(
+            taxon_namespace=tn,
+            gb_to_taxon_fn=lambda gb: tn.require_taxon(
+                label=f'EBOV_2014_{gb.accession}'
+            ),
+        )
 
-ebov.close()
-ebov_2007.close()
+        char_mat.write_to_stream(ebov_2014, 'fasta')
+        char_mat.write_to_stream(sampled, 'fasta')
+        char_mat.write_to_stream(ebov, 'fasta')
+with open('ebov_2007.fasta', 'w') as ebov_2007:
+    for species, recs in get_other_ebov_sources():
+        tn = dendropy.TaxonNamespace()
+        char_mat = recs.generate_char_matrix(
+            taxon_namespace=tn,
+            gb_to_taxon_fn=lambda gb: tn.require_taxon(
+                label=f'{species}_{gb.accession}'
+            ),
+        )
+
+        char_mat.write_to_stream(ebov, 'fasta')
+        char_mat.write_to_stream(sampled, 'fasta')
+        if species == 'EBOV_2007':
+            char_mat.write_to_stream(ebov_2007, 'fasta')
+
+    ebov.close()
 sampled.close()
 # -
 
@@ -112,8 +123,8 @@ def dump_genes(species, recs, g_dls, p_hdls):
 g_hdls = {}
 p_hdls = {}
 for gene in my_genes:
-    g_hdls[gene] = open('%s.fasta' % gene, 'w')
-    p_hdls[gene] = open('%s_P.fasta' % gene, 'w')
+    g_hdls[gene] = open(f'{gene}.fasta', 'w')
+    p_hdls[gene] = open(f'{gene}_P.fasta', 'w')
 for species, recs in get_other_ebolavirus_sources():
     if species in ['RESTV', 'SUDV']:
         dump_genes(species, recs, g_hdls, p_hdls)
@@ -128,10 +139,15 @@ for gene in my_genes:
 
 def describe_seqs(seqs):
     print('Number of sequences: %d' % len(seqs.taxon_namespace))
-    print('First 10 taxon sets: %s' % ' '.join([taxon.label for taxon in seqs.taxon_namespace[:10]]))
-    lens = []
-    for tax, seq in seqs.items():
-        lens.append(len([x for x in seq.symbols_as_list() if x != '-']))
+    print(
+        f"First 10 taxon sets: {' '.join([taxon.label for taxon in seqs.taxon_namespace[:10]])}"
+    )
+
+    lens = [
+        len([x for x in seq.symbols_as_list() if x != '-'])
+        for tax, seq in seqs.items()
+    ]
+
     print('Genome length: min %d, mean %.1f, max %d' % (min(lens), sum(lens) / len(lens), max(lens)))
 
 
@@ -148,10 +164,7 @@ species = defaultdict(int)
 for taxon in ebolav_seqs.taxon_namespace:
     toks = taxon.label.split('_')
     my_species = toks[0]
-    if my_species == 'EBOV':
-        ident = '%s (%s)' % (my_species, toks[1])
-    else:
-        ident = my_species
+    ident = f'{my_species} ({toks[1]})' if my_species == 'EBOV' else my_species
     species[ident] += 1
 for my_species, cnt in species.items():
     print("%20s: %d" % (my_species, cnt))
@@ -166,10 +179,15 @@ my_genes = ['NP', 'L', 'VP35', 'VP40']
 
 for name in my_genes:
     gene_name = name.split('.')[0]
-    seqs = dendropy.DnaCharacterMatrix.get_from_path('%s.fasta' % name, schema='fasta', data_type='dna')
-    gene_length[gene_name] = []
-    for tax, seq in seqs.items():
-        gene_length[gene_name].append(len([x for x in seq.symbols_as_list() if x != '-']))
+    seqs = dendropy.DnaCharacterMatrix.get_from_path(
+        f'{name}.fasta', schema='fasta', data_type='dna'
+    )
+
+    gene_length[gene_name] = [
+        len([x for x in seq.symbols_as_list() if x != '-'])
+        for tax, seq in seqs.items()
+    ]
+
 for gene, lens in gene_length.items():
     print ('%6s: %d' % (gene, sum(lens) / len(lens)))
 # -

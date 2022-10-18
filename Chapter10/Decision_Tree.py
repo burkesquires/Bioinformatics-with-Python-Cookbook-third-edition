@@ -18,24 +18,12 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn import tree
 
-# + [markdown] jupyter={"outputs_hidden": false}
-# http://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+%28diagnostic%29
-
-# + jupyter={"outputs_hidden": false}
-# !wget http://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/breast-cancer-wisconsin.data
-# !wget http://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/breast-cancer-wisconsin.names
-# -
-
-# ## With scikit-learn
-
-# + jupyter={"outputs_hidden": false}
-f = open('breast-cancer-wisconsin.data')
-w = open('clean.data', 'w')
-for line in f:
-    if line.find('?') > -1:
-        continue
-    w.write(line)
-f.close()
+with open('breast-cancer-wisconsin.data') as f:
+    w = open('clean.data', 'w')
+    for line in f:
+        if line.find('?') > -1:
+            continue
+        w.write(line)
 w.close()
 
 # + jupyter={"outputs_hidden": false}

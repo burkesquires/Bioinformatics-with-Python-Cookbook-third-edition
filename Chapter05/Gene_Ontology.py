@@ -24,14 +24,14 @@ import requests
 ensembl_server = 'http://rest.ensembl.org'
 
 def do_request(server, service, *args, **kwargs):
-    params = ''
-    for a in args:
-        if a is not None:
-            params += '/' + a
-    req = requests.get('%s/%s%s' % (server, service, params),
-                       params=kwargs,
-                       headers={'Content-Type': 'application/json'})
- 
+    params = ''.join(f'/{a}' for a in args if a is not None)
+    req = requests.get(
+        f'{server}/{service}{params}',
+        params=kwargs,
+        headers={'Content-Type': 'application/json'},
+    )
+
+
     if not req.ok:
         req.raise_for_status()
     return req.json()
@@ -47,7 +47,7 @@ print(refs[0].keys())
 for ref in refs:
     go_id = ref['primary_id']
     details = do_request(ensembl_server, 'ontology/id', go_id)
-    print('%s %s %s' % (go_id,  details['namespace'], ref['description']))
+    print(f"{go_id} {details['namespace']} {ref['description']}")
     print('%s\n' % details['definition'])
 
 go_id = 'GO:0000016'
@@ -58,7 +58,7 @@ for k, v in my_data.items():
             print(parent)
             parent_id = parent['accession']
     else:
-        print('%s: %s' % (k, str(v)))
+        print(f'{k}: {str(v)}')
 print()
 parent_data = do_request(ensembl_server, 'ontology/id', parent_id)
 print(parent_id, len(parent_data['children']))
@@ -67,7 +67,7 @@ refs = do_request(ensembl_server, 'ontology/ancestors/chart', go_id)
 for go, entry in refs.items():
     print(go)
     term = entry['term']
-    print('%s %s' % (term['name'], term['definition']))
+    print(f"{term['name']} {term['definition']}")
     is_a = entry.get('is_a', [])
     print('\t is a: %s\n' % ', '.join([x['accession'] for x in is_a]))
 

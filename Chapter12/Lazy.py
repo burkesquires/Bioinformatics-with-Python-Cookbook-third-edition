@@ -39,12 +39,10 @@ def gene_min_reads(source, min_reads):
 
 
 def gene_min_observations(subset_source, min_observations):
-    my_observations = 0
-    for gene in subset_source:
-        my_observations += 1
-        if my_observations == min_observations:
-            return True
-    return False
+    return any(
+        my_observations == min_observations
+        for my_observations, _ in enumerate(subset_source, start=1)
+    )
 
 
 print(gene_min_observations(

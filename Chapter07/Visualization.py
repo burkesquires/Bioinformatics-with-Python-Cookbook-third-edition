@@ -43,10 +43,10 @@ my_colors = OrderedDict({
 })
 
 def get_color(name):
-    for pref, color in my_colors.items():
-        if name.find(pref) > -1:
-            return color
-    return 'grey'
+    return next(
+        (color for pref, color in my_colors.items() if name.find(pref) > -1),
+        'grey',
+    )
 
 def color_tree(node, fun_color=get_color):
     if node.is_terminal():
@@ -56,10 +56,7 @@ def color_tree(node, fun_color=get_color):
         for child in node.clades:
             color_tree(child, fun_color)
             my_children.add(child.color.to_hex())
-        if len(my_children) == 1:
-            node.color = child.color
-        else:
-            node.color = 'grey'
+        node.color = child.color if len(my_children) == 1 else 'grey'
 
 ebola_color_tree = deepcopy(ebola_tree)
 color_tree(ebola_color_tree.root)

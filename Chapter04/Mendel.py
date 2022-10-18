@@ -22,12 +22,10 @@ num_ofs = 20
 
 # +
 num_hets_AA_AT = []
-for sim in range(num_sims):
-    sim_hets = 0
-    for ofs in range(20):
-        sim_hets += 1 if random.choice([0, 1]) == 1 else 0
+for _ in range(num_sims):
+    sim_hets = sum(1 if random.choice([0, 1]) == 1 else 0 for _ in range(20))
     num_hets_AA_AT.append(sim_hets)
-    
+
 fig, ax = plt.subplots(1,1, figsize=(16,9))
 ax.hist(num_hets_AA_AT, bins=range(20))
 print(len([num_hets for num_hets in num_hets_AA_AT if num_hets==20]))
@@ -35,10 +33,10 @@ print(len([num_hets for num_hets in num_hets_AA_AT if num_hets==20]))
 
 num_AAs_AT_AT = []
 num_hets_AT_AT = []
-for sim in range(num_sims):
+for _ in range(num_sims):
     sim_AAs = 0
     sim_hets = 0
-    for ofs in range(20):
+    for _ in range(20):
         derived_cnt = sum(random.choices([0, 1], k=2))
         sim_AAs += 1 if derived_cnt == 0 else 0
         sim_hets += 1 if derived_cnt == 1 else 0
@@ -76,9 +74,7 @@ del mendelian_errors
 prob_ok_choice = error_observations / ok_observations
 
 def accept_entry(row):
-    if row[-1] == 1:
-        return True
-    return random.random() <= prob_ok_choice
+    return True if row[-1] == 1 else random.random() <= prob_ok_choice
 
 accept_entry_v = np.vectorize(accept_entry, signature='(i)->()')
 

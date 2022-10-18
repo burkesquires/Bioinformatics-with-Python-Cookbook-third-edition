@@ -18,14 +18,14 @@ import requests
 ensembl_server = 'http://rest.ensembl.org'
 
 def do_request(server, service, *args, **kwargs):
-    url_params = ''
-    for a in args:
-        if a is not None:
-            url_params += '/' + a
-    req = requests.get('%s/%s%s' % (server, service, url_params),
-                       params=kwargs,
-                       headers={'Content-Type': 'application/json'})
- 
+    url_params = ''.join(f'/{a}' for a in args if a is not None)
+    req = requests.get(
+        f'{server}/{service}{url_params}',
+        params=kwargs,
+        headers={'Content-Type': 'application/json'},
+    )
+
+
     if not req.ok:
         req.raise_for_status()
     return req.json()

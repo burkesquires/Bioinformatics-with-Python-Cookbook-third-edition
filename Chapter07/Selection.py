@@ -29,16 +29,23 @@ print(len(drc_2007))
 
 pair_stats = popgenstat.PopulationPairSummaryStatistics(sl_2014, drc_2007)
 
-print('Average number of pairwise differences (total): %s' %
-      pair_stats.average_number_of_pairwise_differences)
-print('Average number of pairwise differences between populations: %s' %
-      pair_stats.average_number_of_pairwise_differences_between)
-print('Average number of pairwise differences within populations: %s' %
-      pair_stats.average_number_of_pairwise_differences_within)
-print('Average number of new pairwise differences : %s' %
-      pair_stats.average_number_of_pairwise_differences_net)
-print('Number of segregating sites: %s' %
-      pair_stats.num_segregating_sites)
+print(
+    f'Average number of pairwise differences (total): {pair_stats.average_number_of_pairwise_differences}'
+)
+
+print(
+    f'Average number of pairwise differences between populations: {pair_stats.average_number_of_pairwise_differences_between}'
+)
+
+print(
+    f'Average number of pairwise differences within populations: {pair_stats.average_number_of_pairwise_differences_within}'
+)
+
+print(
+    f'Average number of new pairwise differences : {pair_stats.average_number_of_pairwise_differences_net}'
+)
+
+print(f'Number of segregating sites: {pair_stats.num_segregating_sites}')
 print("Watterson's theta: %s" %
       pair_stats.wattersons_theta)
 print("Wakeley's Psi: %s" % pair_stats.wakeleys_psi)

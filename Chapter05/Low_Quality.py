@@ -48,7 +48,7 @@ for rec in recs:
     chrom_Ns[chrom] = []
     on_N = False
     curr_size = 0
-    for pos, nuc in enumerate(rec.seq):
+    for nuc in rec.seq:
         if nuc in ['N', 'n']:
             curr_size += 1
             on_N = True
@@ -63,10 +63,7 @@ for rec in recs:
 
 for chrom, Ns in chrom_Ns.items():
     size = chrom_sizes[chrom]
-    if len(Ns) > 0:
-        max_Ns = max(Ns)
-    else:
-        max_Ns = 'NA'
+    max_Ns = max(Ns) if len(Ns) > 0 else 'NA'
     print(f'{chrom} ({size}): %Ns ({round(100 * sum(Ns) / size, 1)}), num Ns: {len(Ns)}, max N: {max_Ns}')
 
 # ## Atroparvus super-contigs
@@ -77,10 +74,7 @@ size_N = []
 for rec in recs:
     size = len(rec.seq)
     sizes.append(size)
-    count_N = 0
-    for nuc in rec.seq:
-        if nuc in ['n', 'N']:
-            count_N += 1
+    count_N = sum(nuc in ['n', 'N'] for nuc in rec.seq)
     size_N.append((size, count_N / size))
 
 print(len(sizes), np.median(sizes), np.mean(sizes), max(sizes), min(sizes),

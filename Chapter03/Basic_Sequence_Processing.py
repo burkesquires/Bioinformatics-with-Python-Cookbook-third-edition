@@ -14,7 +14,7 @@
 
 from Bio import Entrez, Seq, SeqIO, SeqRecord
 
-Entrez.email = "put@your_email.here" 
+Entrez.email = "put@your_email.here"
 hdl = Entrez.efetch(db='nucleotide', id=['NM_002299'], rettype='gb')  # Lactase gene
 #for l in hdl:
 #    print l
@@ -25,10 +25,8 @@ for feature in gb_rec.features:
         location = feature.location  # Note translation existing
 cds = SeqRecord.SeqRecord(gb_rec.seq[location.start:location.end], 'NM_002299', description='LCT CDS only')
 
-w_hdl = open('example.fasta', 'w')
-SeqIO.write([cds], w_hdl, 'fasta')
-w_hdl.close()
-
+with open('example.fasta', 'w') as w_hdl:
+    SeqIO.write([cds], w_hdl, 'fasta')
 recs = SeqIO.parse('example.fasta', 'fasta')
 for rec in recs:
     seq = rec.seq

@@ -94,10 +94,7 @@ def compute_mendelian_errors(mother, father, offspring):
                 # Homo, should be het
                 num_errors += 1
                 num_ofs_problems += 1
-    elif len(mother) == 2 and len(father) == 2:
-        # Both are het, individual offspring can be anything
-        pass
-    else:
+    elif len(mother) != 2 or len(father) != 2:
         # One is het, the other is homo
         homo = mother if len(mother) == 1 else father
         for ofs in offspring:
@@ -111,18 +108,15 @@ def compute_mendelian_errors(mother, father, offspring):
 # +
 def acceptable_position_to_genotype():
     for i, genotype in enumerate(calldata_genotype):
-        if is_snp[i] and num_alleles[i] == 2:
-            if len(np.where(genotype == -1)[0]) > 1:
-                # Missing data
-                continue
+        if (
+            is_snp[i]
+            and num_alleles[i] == 2
+            and len(np.where(genotype == -1)[0]) <= 1
+        ):
             yield i
 
 def acumulate(fun):
-    acumulator = {}
-    for res in fun():
-        if res is not None:
-            acumulator[res[0]] = res[1]
-    return acumulator
+    return {res[0]: res[1] for res in fun() if res is not None}
 
 
 # +

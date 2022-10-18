@@ -30,15 +30,13 @@ parser = PDB.PDBParser()
 repository.retrieve_pdb_file('1TUP', pdir='.', file_format='pdb')
 p53_1tup = parser.get_structure('P 53', 'pdb1tup.ent')
 
-my_residues = set()
-for residue in p53_1tup.get_residues():
-    my_residues.add(residue.id[0])
+my_residues = {residue.id[0] for residue in p53_1tup.get_residues()}
 print(my_residues)
 
 
 # +
 def get_mass(atoms, accept_fun=lambda atom: atom.parent.id[0] != 'W'):
-    return sum([atom.mass for atom in atoms if accept_fun(atom)])
+    return sum(atom.mass for atom in atoms if accept_fun(atom))
 
 chain_names = [chain.id for chain in p53_1tup.get_chains()]
 my_mass = np.ndarray((len(chain_names), 3))

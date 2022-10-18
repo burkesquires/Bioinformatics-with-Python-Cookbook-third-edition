@@ -38,10 +38,10 @@ from Bio.Align.Applications import MuscleCommandline
 my_genes = ['NP', 'L', 'VP35', 'VP40']
 
 for gene in my_genes:
-    muscle_cline = MuscleCommandline(input='%s_P.fasta' % gene)
+    muscle_cline = MuscleCommandline(input=f'{gene}_P.fasta')
     print(muscle_cline)
     stdout, stderr = muscle_cline()
-    with open('%s_P_align.fasta' % gene, 'w') as w:
+    with open(f'{gene}_P_align.fasta', 'w') as w:
         w.write(stdout)
 
 # +
@@ -52,12 +52,9 @@ from Bio.SeqRecord import SeqRecord
 # from Bio.Alphabet import generic_protein
 
 for gene in my_genes:
-    gene_seqs = {}
-    unal_gene = SeqIO.parse('%s.fasta' % gene, 'fasta')
-    for rec in unal_gene:
-        gene_seqs[rec.id] = rec.seq
-
-    al_prot = SeqIO.parse('%s_P_align.fasta' % gene, 'fasta')
+    unal_gene = SeqIO.parse(f'{gene}.fasta', 'fasta')
+    gene_seqs = {rec.id: rec.seq for rec in unal_gene}
+    al_prot = SeqIO.parse(f'{gene}_P_align.fasta', 'fasta')
     al_genes = []
     for protein in al_prot:
         my_id = protein.id
@@ -72,7 +69,7 @@ for gene in my_genes:
         al_genes.append(SeqRecord(Seq(seq), id=my_id))
 
 
-    SeqIO.write(al_genes, '%s_align.fasta' % gene, 'fasta')
+    SeqIO.write(al_genes, f'{gene}_align.fasta', 'fasta')
 # -
 
 

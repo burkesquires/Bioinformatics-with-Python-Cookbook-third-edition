@@ -8,9 +8,7 @@ columns = list(vdata_pd.columns)
 vdata_pd.info(memory_usage="deep")
 
 vdata_arrow = csv.read_csv("2021VAERSDATA.csv.gz")
-tot_bytes = sum([
-    vdata_arrow[name].nbytes
-    for name in vdata_arrow.column_names])
+tot_bytes = sum(vdata_arrow[name].nbytes for name in vdata_arrow.column_names)
 print(f"Total {tot_bytes // (1024 ** 2)} MB")
 
 for name in vdata_arrow.column_names:

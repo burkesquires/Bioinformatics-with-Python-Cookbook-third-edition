@@ -13,9 +13,7 @@ def fibo_iter(n):
 def fibo_naive(n):
     if n == 0:
         return 0
-    if n == 1:
-        return 1
-    return fibo_naive(n - 1) + fibo_naive(n - 2)
+    return 1 if n == 1 else fibo_naive(n - 1) + fibo_naive(n - 2)
 
 
 fibo_iter(0)
@@ -29,9 +27,7 @@ fibo_naive(1000)
 
 
 def factorial(n):
-    if n == 1:
-        return 1
-    return n * factorial(n - 1)
+    return 1 if n == 1 else n * factorial(n - 1)
 
 
 factorial(5)

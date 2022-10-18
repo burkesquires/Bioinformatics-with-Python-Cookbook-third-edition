@@ -66,9 +66,17 @@ data['sample_cohort'] = xr.DataArray(
 
 cohort_allele_frequency = sg.cohort_allele_frequencies(data)['cohort_allele_frequency'].values
 
-monom = {}
-for i, pop in enumerate(pops):
-    monom[pop] = len(list(filter(lambda x: x, np.isin(cohort_allele_frequency[:, i, 0], [0, 1]))))
+monom = {
+    pop: len(
+        list(
+            filter(
+                lambda x: x, np.isin(cohort_allele_frequency[:, i, 0], [0, 1])
+            )
+        )
+    )
+    for i, pop in enumerate(pops)
+}
+
 pprint(monom)
 
 # # MAF

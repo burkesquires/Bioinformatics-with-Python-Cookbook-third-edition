@@ -29,24 +29,20 @@
 import os
 from collections import defaultdict
 
-# ## Loading HapMap meta-data
-
-f = open('relationships_w_pops_041510.txt')
-pop_ind = defaultdict(list)
-f.readline()  # header
-offspring = []
-for l in f:
-    toks = l.rstrip().split('\t')
-    fam_id = toks[0]
-    ind_id = toks[1]
-    mom = toks[2]
-    dad = toks[3]
-    if mom != '0' or dad != '0':
-        offspring.append((fam_id, ind_id))
-    pop = toks[-1]
-    pop_ind[pop].append((fam_id, ind_id))
-f.close()
-
+with open('relationships_w_pops_041510.txt') as f:
+    pop_ind = defaultdict(list)
+    f.readline()  # header
+    offspring = []
+    for l in f:
+        toks = l.rstrip().split('\t')
+        fam_id = toks[0]
+        ind_id = toks[1]
+        mom = toks[2]
+        dad = toks[3]
+        if mom != '0' or dad != '0':
+            offspring.append((fam_id, ind_id))
+        pop = toks[-1]
+        pop_ind[pop].append((fam_id, ind_id))
 # ## Sub-sampling
 
 os.system('plink2 --pedmap hapmap3_r3_b36_fwd.consensus.qc.poly --out hapmap10 --thin 0.1 --geno 0.1 --export ped')
@@ -57,15 +53,14 @@ os.system('plink2 --pedmap hapmap3_r3_b36_fwd.consensus.qc.poly --out hapmap1 --
 
 def get_non_auto_SNPs(map_file, exclude_file):
     f = open(map_file)
-    w = open(exclude_file, 'w')
-    for l in f:
-        toks = l.rstrip().split('\t')
-        try:
-            chrom = int(toks[0])
-        except ValueError:
-            rs = toks[1]
-            w.write('%s\n' % rs)
-    w.close()
+    with open(exclude_file, 'w') as w:
+        for l in f:
+            toks = l.rstrip().split('\t')
+            try:
+                chrom = int(toks[0])
+            except ValueError:
+                rs = toks[1]
+                w.write('%s\n' % rs)
 
 
 get_non_auto_SNPs('hapmap10.map', 'exclude10.txt')

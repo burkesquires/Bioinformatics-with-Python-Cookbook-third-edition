@@ -50,7 +50,7 @@ def parse_pdb(hdl):
                     except ValueError:
                         toks.append(None)  # eg continuation
                 yield (section, toks)
-        if len(toks) == 0:
+        if not toks:
             yield ('UNKNOWN', line)
                 
 
@@ -78,7 +78,7 @@ def process_multi_lines(hdl):
             current_multi = ''
             current_multi_name = None
         if rec_type in multi_lines:
-            current_multi += toks[1].strip().rstrip() + ' '
+            current_multi += f'{toks[1].strip().rstrip()} '
             current_multi_name = rec_type
         else:
             if len(current_multi) != 0:
@@ -119,9 +119,7 @@ def process_struct_types(hdl):
     for rec_type, toks in process_multi_lines(hdl):
         if rec_type in struct_types.keys():
             funs = struct_types[rec_type]
-            struct_toks = []
-            for tok, fun in zip(toks, funs):
-                struct_toks.append(fun(tok))
+            struct_toks = [fun(tok) for tok, fun in zip(toks, funs)]
             yield rec_type, struct_toks
         else:
             yield rec_type, toks

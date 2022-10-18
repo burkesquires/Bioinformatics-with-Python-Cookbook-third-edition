@@ -100,14 +100,12 @@ for name in names:
 
 stats = {}
 colors = ['b', 'g']
-i = 0
 fig, ax = plt.subplots(figsize=(16, 9))
-for name, nwins in mq0_wins.items():
+for i, (name, nwins) in enumerate(mq0_wins.items()):
     stats[name] = apply_win_funs(nwins, {'median': np.median, '75': functools.partial(np.percentile, q=95)})
     x_lim = [j * size  for j in range(len(stats[name]))]
     ax.plot(x_lim, [x['median'] for x in stats[name]], label=name, color=colors[i])
     ax.plot(x_lim, [x['75'] for x in stats[name]], '--', color=colors[i])
-    i += 1
 #ax.set_ylim(0, 40)
 ax.legend()
 ax.set_xlabel('Genomic location in the downloaded segment', fontsize='xx-large')
@@ -163,8 +161,7 @@ def plot_hz_rel(dps, ax, ax2, name, rel):
 
 ax2 = ax.twinx()
 for name, rel in rels.items():
-    dps = list(set([x[1] for x in rel.keys()]))
-    dps.sort()
+    dps = sorted({x[1] for x in rel.keys()})
     plot_hz_rel(dps, ax, ax2, name, rel)
 ax.set_xlim(0, 75)
 ax.set_ylim(0, 0.2)
@@ -219,7 +216,7 @@ for name in names:
 
 fig, ax = plt.subplots(figsize=(16,9), dpi=300, tight_layout=True)
 name = 'standard.vcf.gz'
-bp_vals = [[] for x in range(len(accepted_eff) + 1)]
+bp_vals = [[] for _ in range(len(accepted_eff) + 1)]
 for k, cnt in eff_mq0s[name].items():
     my_eff, mq0 = k
     bp_vals[my_eff].extend([mq0] * cnt)

@@ -25,7 +25,7 @@ from dendropy.interop import raxml
 ebola_data = dendropy.DnaCharacterMatrix.get_from_path('trim.fasta', 'fasta')
 rx = raxml.RaxmlRunner()
 ebola_tree = rx.estimate_tree(ebola_data, ['-m', 'GTRGAMMA', '-N', '10'])
-print('RAxML temporary directory: %s' % rx.working_dir_path)
+print(f'RAxML temporary directory: {rx.working_dir_path}')
 del ebola_data
 
 ebola_tree.write_to_path('my_ebola.nex', 'nexus')
